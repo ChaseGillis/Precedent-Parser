@@ -4,7 +4,7 @@ import json
 
 '''
 source bin/activate
-
+git pull .
 git add .
 git commit -m “message”
 git push
@@ -31,9 +31,10 @@ result = search_cases(keywords, jurisdiction)
 newURL=result['results'][0]['url']
 response = requests.get(newURL)
 print(json.loads(str(BeautifulSoup(response.text,'html.parser'))))
-'''
-while ('Opinion' not in newURL):
+
+for i in range(1):
     response = requests.get(newURL)
     soup = BeautifulSoup(response.text,'html.parser')
     newStuff=json.loads(str(soup))
-    newURL = newStuff['frontend_url']'''
+    newURL = newStuff['frontend_url']
+    print(newStuff)
