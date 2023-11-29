@@ -3,6 +3,12 @@ import requests
 from bs4 import BeautifulSoup
 import json
 from random import randint
+from openai import OpenAI
+
+
+
+
+
 
 SCRAPEOPS_API_KEY = "f6dd0985-fe2f-42c1-8e8d-2ce540b8ab4f"
 
@@ -89,6 +95,21 @@ for i in range(len(result["results"])):
 print(len(bigArrayTest))
 
   
+
+client = OpenAI(api_key="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")
+
+response = client.chat.completions.create(
+  model="gpt-4-1106-preview",
+  messages=[{"role": "user", "content": ""}])
+message = response.choices[0].message.content
+print(message)
+
+
+
+
+
+
+
 
 
 # their stuff
