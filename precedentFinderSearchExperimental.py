@@ -10,7 +10,7 @@ from openai import OpenAI
 
 
 
-SCRAPEOPS_API_KEY = "f6dd0985-fe2f-42c1-8e8d-2ce540b8ab4f"
+SCRAPEOPS_API_KEY = "[YOUR API KEY]"
 
 # #1. use the search feature to find all the cases according to the filter and keywords
 # #2. parse through them to get specifications(cant find the decisions, so just the keywords and jurisdiction should be ok) and store them in arrays e.g: [id, name, decision_date, frontendUrl]
@@ -96,7 +96,7 @@ print(len(bigArrayTest))
 
   
 
-client = OpenAI(api_key="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")
+client = OpenAI(api_key="[YOUR API KEY]")
 
 response = client.chat.completions.create(
   model="gpt-4-1106-preview",
