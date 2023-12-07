@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup
 import json
 from random import randint
 from openai import OpenAI
+import re
 
 
 
@@ -94,6 +95,7 @@ with col3:
 
 
 
+
 # backend code
 
 SCRAPEOPS_API_KEY = ""
@@ -109,26 +111,135 @@ def get_random_header(header_list):
 
 header_list = get_headers_list()
 
+# as per recommendation from @freylis, compile once only
+CLEANR = re.compile('<.*?>') 
 
+def cleanhtml(raw_html):
+  cleantext = re.sub(CLEANR, '', raw_html)
+  return cleantext
 
 def search_cases(keywords, jurisdiction=None):
     base_url = 'https://www.courtlistener.com/?type=o&q=contract%20law&type=o&order_by=score%20desc&stat_Precedential=on&filed_after=11%2F15%2F2020&filed_before=12%2F01%2F2023&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag'
-    search_url = ""
+    search_url = "https://www.courtlistener.com/api/rest/v3/search/?"
     #keywords
     if(len(keywords)>0):
-        search_url+= keywords
+        search_url+= "q="+ keywords
     search_url+= "&type=o&order_by=score%20desc&stat_Precedential=on"
-    if(len(after_date)>0):
-        search_url += "&filed_after=11%2F15%2F2020"
+    if(after_date!=None):
+        year = after_date.strftime("%Y")
+        month = after_date.strftime("%m")
+        day = after_date.strftime("%d")
+        search_url += "&filed_after=" + month+ "%2F" + day + "%2F" + year
     #this can be broken if user makes before come after
-    if (len(before_date) > 0):
-        search_url += "&filed_after=11%2F15%2F2020"
+    if (before_date!=None):
+        year = before_date.strftime("%Y")
+        month = before_date.strftime("%m")
+        day = before_date.strftime("%d")
+        search_url += "&filed_before=" + month+ "%2F" + day + "%2F" + year
+    #pain.....I just did this manually because I'm an idiot    
     match jurisdiction:
-        case "Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'])":
+        case "Alabama'":
             search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
-        case
+        case 'Alaska':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Arkansas':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'California':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Colorado':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Connecticut':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Delaware':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'District of Columbia':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Florida':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Georgia':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Hawaii':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Idaho':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Illinois':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Indiana':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Iowa':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Kansas':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Kentucky':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Louisiana':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Maine':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Maryland':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Massachusetts':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Michigan':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Minnesota':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Mississippi':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Missouri':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Montana':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Nebraska':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Nevada':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'New Hampshire':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'New Jersey':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'New Mexico':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'New York':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'North Carolina':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'North Dakota':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Ohio':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Oklahoma':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Oregon':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Pennsylvania':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Rhode Island':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'South Carolina':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'South Dakota':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Tennessee':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Texas':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Utah':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Vermont':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Virginia':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Washington':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'West Virginia':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Wisconsin':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
+        case 'Wyoming':
+            search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
 
-
+    print(search_url)
     response = requests.get(search_url)
     if response.status_code == 200:
         data = response.json()
@@ -137,29 +248,50 @@ def search_cases(keywords, jurisdiction=None):
         print(f"Error: {response.status_code}")
         return None
 
-bigArrayTest = []
-
-for i in range(len(result["results"])):
-    response = requests.get(
-        url="https://www.courtlistener.com/api/rest/v3/opinions/" + (str(result["results"][i]["id"])) + "/?format=json",
-        headers=get_random_header(header_list))
-    data = response.json()
-    bigArrayTest.append(data["html_with_citations"])
-
-
-client = OpenAI(api_key="")
-
-response = client.chat.completions.create(
-    model="gpt-4-1106-preview",
-    messages=[{"role": "user",
-               "content": "Based on the Given court opinion(ignore the HTML format), [" + bigArrayTest[
-                   0] + "], Use the most relevant inputted case information to write a one-sentence strategy that the winning lawyer used so that a new lawyer can mimic it"}])
-message = response.choices[0].message.content
-print(message)
 
 
 
 
 
+outputMessage = ""
 # submit button
 if st.button('Search'):
+    #store all of the id's in an array
+    bigArray = []
+    result = search_cases(keywords, jurisdiction)
+    #fill the bigArray array with the opinions
+    for i in range(len(result["results"])):
+        response = requests.get(
+            url="https://www.courtlistener.com/api/rest/v3/opinions/" + (str(result["results"][i]["id"])) + "/?format=json",
+            headers=get_random_header(header_list))
+        data = response.json()
+        bigArray.append(cleanhtml(data["html_with_citations"]))
+
+    #create a big string that will be put in
+    allOpinions = ""
+    numberToLimit = int(113600/len(bigArray)) - 13
+    for i in range(len(bigArray)):
+        allOpinions += "{OPINION " + str(i+1) + "}\n"
+        if len(bigArray[i])>numberToLimit:
+           #limit it if its too big
+           allOpinions += bigArray[i][0:numberToLimit] + "...UNFINISHED\n" 
+        else:
+            allOpinions += bigArray[i] + "\n"
+
+    
+
+
+    outputMessage = str(len(allOpinions)) + allOpinions
+    client = OpenAI(api_key="")
+
+    response = client.chat.completions.create(
+        model="gpt-4-1106-preview",
+        messages=[{"role": "user",
+                "content": "Based on these Given court opinions stored in the brackets(separated by {OPINION #}) (ignore any HTML format) [" + allOpinions + "] give the name of the inputted case most relevant to the keywords [" + keywords + "] and then use that case information to write a four-sentence strategy that the winning lawyer used so that a new lawyer can mimic it(note that some opinions may be unfinished and will end with:...UNFINISHED). Use direct quotes from the opinion given to support this strategy. The direct quotes don’t count towards the four-sentence limit. If it's impossible to identify the relevant case or provide a strategy with direct quotes, simply respond: No relevant cases based on inputed values"
+                }])
+    message = response.choices[0].message.content
+    outputMessage = message
+    
+
+
+st.text_area(label= "result", value="Enter Keywords and press search!" if outputMessage=="" else outputMessage, height=400, disabled=True, label_visibility="hidden")
