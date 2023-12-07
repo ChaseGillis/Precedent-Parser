@@ -275,4 +275,4 @@ if st.button('Search'):
     message = response.choices[0].message.content
     outputMessage = message
 
-st.text_area(label= "result", value="Enter Keywords and press search!" if outputMessage=="" else outputMessage, height=400, disabled=True, label_visibility="hidden")
+st.text_area(label= "result", value="Enter search parameters and press the 'Search' button" if outputMessage=="" else outputMessage, height=400, disabled=True, label_visibility="hidden")
