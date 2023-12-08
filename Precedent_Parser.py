@@ -13,8 +13,8 @@ from openai import OpenAI
 import re
 
 # API keys
-SCRAPEOPS_API_KEY = "f6dd0985-fe2f-42c1-8e8d-2ce540b8ab4f"
-OPENAI_API_KEY = "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"
+SCRAPEOPS_API_KEY = "[SCRAPEOS_API_KEY]"
+OPENAI_API_KEY = "[OPENAI API KEY]"
 
 # frontend code
 # logo images
