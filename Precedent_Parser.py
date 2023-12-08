@@ -4,7 +4,6 @@ from PIL import Image
 import os
 import datetime
 
-
 # import backend libraries
 import requests
 from bs4 import BeautifulSoup
@@ -14,8 +13,8 @@ from openai import OpenAI
 import re
 
 # API keys
-SCRAPEOPS_API_KEY = "[SCRAPEOS API KEY]"
-OPENAI_API_KEY = "[OPENAI API KEY]"
+SCRAPEOPS_API_KEY = "f6dd0985-fe2f-42c1-8e8d-2ce540b8ab4f"
+OPENAI_API_KEY = "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"
 
 # frontend code
 # logo images
@@ -56,20 +55,23 @@ with col3:
     if team_open:
         with col1:
             st.image(chase_image, width=200)
-            st.write('My name is Chase Gillis. I am currently a Junior majoring Computer Science and minoring in Data Science!')
+            st.write(
+                'My name is Chase Gillis. I am currently a Junior majoring Computer Science and minoring in Data Science!')
         with col2:
             st.write('')
             st.write('')
             st.write('')
             st.image(bryan_image, width=200)
-            st.write('My name is Bryan Ko. I am currently a Freshman majoring Computer Science and Data Science, and minoring in Game Design!')
+            st.write(
+                'My name is Bryan Ko. I am currently a Freshman majoring Computer Science and Data Science, and minoring in Game Design!')
         with col3:
             i = 0
-            while i < 7:
+            while i < 6:
                 st.write('')
                 i += 1
             st.image(kevin_image, width=200)
-            st.write('My name is Kevin Dong. I am currently a Freshman majoring Math and Computer Science, and minoring in Data Science!')
+            st.write(
+                'My name is Kevin Dong. I am currently a Freshman majoring Math and Computer Science, and minoring in Data Science!')
 
 # main content section
 st.header('What cases are you looking for?')
@@ -84,11 +86,20 @@ col1, col2, col3 = st.columns(3)
 current_date = datetime.date.today()
 with col1:
     after_date = st.date_input('After date:', min_value=datetime.date(1776, 1, 1), max_value=current_date)
+    after_date_str = after_date.strftime('%m/%d/%Y')
 with col2:
     before_date = st.date_input('Before date:', min_value=datetime.date(1776, 1, 1), max_value=current_date)
+    before_date_str = before_date.strftime('%m/%d/%Y')
 with col3:
-    jurisdiction = st.selectbox('US state:', ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'])
-
+    jurisdiction = st.selectbox('US state:',
+                                ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut',
+                                 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho',
+                                 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland',
+                                 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana',
+                                 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York',
+                                 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania',
+                                 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah',
+                                 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'])
 
 # backend code
 def get_headers_list():
@@ -103,31 +114,31 @@ def get_random_header(header_list):
 header_list = get_headers_list()
 
 # as per recommendation from @freylis, compile once only
-CLEANR = re.compile('<.*?>') 
+CLEANR = re.compile('<.*?>')
 
 def cleanhtml(raw_html):
-  cleantext = re.sub(CLEANR, '', raw_html)
-  return cleantext
+    cleantext = re.sub(CLEANR, '', raw_html)
+    return cleantext
 
 def search_cases(keywords, jurisdiction=None):
     base_url = 'https://www.courtlistener.com/?type=o&q=contract%20law&type=o&order_by=score%20desc&stat_Precedential=on&filed_after=11%2F15%2F2020&filed_before=12%2F01%2F2023&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag'
     search_url = "https://www.courtlistener.com/api/rest/v3/search/?"
-    #keywords
-    if(len(keywords)>0):
-        search_url+= "q="+ keywords
-    search_url+= "&type=o&order_by=score%20desc&stat_Precedential=on"
-    if(after_date!=None):
+    # keywords
+    if (len(keywords) > 0):
+        search_url += "q=" + keywords
+    search_url += "&type=o&order_by=score%20desc&stat_Precedential=on"
+    if (after_date != None):
         year = after_date.strftime("%Y")
         month = after_date.strftime("%m")
         day = after_date.strftime("%d")
-        search_url += "&filed_after=" + month+ "%2F" + day + "%2F" + year
-    #this can be broken if user makes before come after
-    if (before_date!=None):
+        search_url += "&filed_after=" + month + "%2F" + day + "%2F" + year
+    # this can be broken if user makes before come after
+    if (before_date != None):
         year = before_date.strftime("%Y")
         month = before_date.strftime("%m")
         day = before_date.strftime("%d")
-        search_url += "&filed_before=" + month+ "%2F" + day + "%2F" + year
-    #pain.....I just did this manually because I'm an idiot    
+        search_url += "&filed_before=" + month + "%2F" + day + "%2F" + year
+    # pain.....I just did this manually because I'm an idiot
     match jurisdiction:
         case "Alabama'":
             search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
@@ -240,39 +251,86 @@ def search_cases(keywords, jurisdiction=None):
         return None
 
 outputMessage = ""
-# submit button
-if st.button('Search'):
-    #store all of the id's in an array
-    bigArray = []
-    result = search_cases(keywords, jurisdiction)
-    #fill the bigArray array with the opinions
-    for i in range(len(result["results"])):
-        response = requests.get(
-            url="https://www.courtlistener.com/api/rest/v3/opinions/" + (str(result["results"][i]["id"])) + "/?format=json",
-            headers=get_random_header(header_list))
-        data = response.json()
-        bigArray.append(cleanhtml(data["html_with_citations"]))
-
-    #create a big string that will be put in
-    allOpinions = ""
-    numberToLimit = int(113600/len(bigArray)) - 13
-    for i in range(len(bigArray)):
-        allOpinions += "{OPINION " + str(i+1) + "}\n"
-        if len(bigArray[i])>numberToLimit:
-           #limit it if its too big
-           allOpinions += bigArray[i][0:numberToLimit] + "...UNFINISHED\n" 
+# search button
+with col1:
+    if st.button('Search'):
+        if after_date == before_date:
+            outputMessage = 'Please choose a different date'
         else:
-            allOpinions += bigArray[i] + "\n"
+            # store all id's in an array
+            bigArray = []
+            result = search_cases(keywords, jurisdiction)
+            # fill the bigArray array with the opinions
+            for i in range(len(result["results"])):
+                response = requests.get(
+                    url="https://www.courtlistener.com/api/rest/v3/opinions/" + (
+                        str(result["results"][i]["id"])) + "/?format=json",
+                    headers=get_random_header(header_list))
+                data = response.json()
+                bigArray.append(cleanhtml(data["html_with_citations"]))
 
-    outputMessage = str(len(allOpinions)) + allOpinions
-    client = OpenAI(api_key=OPENAI_API_KEY)
+            # create a big string that will be put in
+            allOpinions = ""
+            numberToLimit = int(113600 / len(bigArray)) - 13
+            for i in range(len(bigArray)):
+                allOpinions += "{OPINION " + str(i + 1) + "}\n"
+                if len(bigArray[i]) > numberToLimit:
+                    # limit it if it's too big
+                    allOpinions += bigArray[i][0:numberToLimit] + "...UNFINISHED\n"
+                else:
+                    allOpinions += bigArray[i] + "\n"
 
-    response = client.chat.completions.create(
-        model="gpt-4-1106-preview",
-        messages=[{"role": "user",
-                "content": "Based on these Given court opinions stored in the brackets(separated by {OPINION #}) (ignore any HTML format) [" + allOpinions + "] give the name of the inputted case most relevant to the keywords [" + keywords + "] and then use that case information to write a four-sentence strategy that the winning lawyer used so that a new lawyer can mimic it(note that some opinions may be unfinished and will end with:...UNFINISHED). Use direct quotes from the opinion given to support this strategy. The direct quotes don’t count towards the four-sentence limit. If it's impossible to identify the relevant case or provide a strategy with direct quotes, simply respond: No relevant cases based on inputed values"
-                }])
-    message = response.choices[0].message.content
-    outputMessage = message
+            outputMessage = str(len(allOpinions)) + allOpinions
+            client = OpenAI(api_key=OPENAI_API_KEY)
 
-st.text_area(label= "result", value="Enter search parameters and press the 'Search' button" if outputMessage=="" else outputMessage, height=400, disabled=True, label_visibility="hidden")
+            response = client.chat.completions.create(
+                model="gpt-4-1106-preview",
+                messages=[{"role": "user",
+                           "content": "Based on these Given court opinions stored in the brackets(separated by {OPINION #}) (ignore any HTML format) [" + allOpinions + "] give the name of the inputted case most relevant to the keywords [" + keywords + "] and then use that case information to write a four-sentence strategy that the winning lawyer used so that a new lawyer can mimic it(note that some opinions may be unfinished and will end with:...UNFINISHED). Use direct quotes from the opinion given to support this strategy. The direct quotes don’t count towards the four-sentence limit. If it's impossible to identify the relevant case or provide a strategy with direct quotes, simply respond: No relevant cases based on inputed values. Finally, append the link to the case at the end"
+                           }])
+            message = response.choices[0].message.content
+            outputMessage = message
+
+# reload button
+with col2:
+    if st.button('Reload'):
+        if after_date == before_date:
+            outputMessage = 'Please choose a different date'
+        else:
+            # store all id's in an array
+            bigArray = []
+            result = search_cases(keywords, jurisdiction)
+            # fill the bigArray array with the opinions
+            for i in range(len(result["results"])):
+                response = requests.get(
+                    url="https://www.courtlistener.com/api/rest/v3/opinions/" + (
+                        str(result["results"][i]["id"])) + "/?format=json",
+                    headers=get_random_header(header_list))
+                data = response.json()
+                bigArray.append(cleanhtml(data["html_with_citations"]))
+
+            # create a big string that will be put in
+            allOpinions = ""
+            numberToLimit = int(113600 / len(bigArray)) - 13
+            for i in range(len(bigArray)):
+                allOpinions += "{OPINION " + str(i + 1) + "}\n"
+                if len(bigArray[i]) > numberToLimit:
+                    # limit it if it's too big
+                    allOpinions += bigArray[i][0:numberToLimit] + "...UNFINISHED\n"
+                else:
+                    allOpinions += bigArray[i] + "\n"
+
+            outputMessage = str(len(allOpinions)) + allOpinions
+            client = OpenAI(api_key=OPENAI_API_KEY)
+
+            response = client.chat.completions.create(
+                model="gpt-4-1106-preview",
+                messages=[{"role": "user",
+                           "content": "Based on these Given court opinions stored in the brackets(separated by {OPINION #}) (ignore any HTML format) [" + allOpinions + "] give the name of the inputted case that is next most relevant to the keywords [" + keywords + "] and then use that case information to write a four-sentence strategy that the winning lawyer used so that a new lawyer can mimic it(note that some opinions may be unfinished and will end with:...UNFINISHED). Use direct quotes from the opinion given to support this strategy. The direct quotes don’t count towards the four-sentence limit. If it's impossible to identify the relevant case or provide a strategy with direct quotes, simply respond: No relevant cases based on inputed values. Finally, append the link to the case at the end"
+                           }])
+            message = response.choices[0].message.content
+            outputMessage = message
+
+st.text_area(label="Result:",
+             value="Enter search parameters and press the 'Search' button" if outputMessage == "" else outputMessage,
+             height=400, disabled=True, label_visibility="collapsed")
