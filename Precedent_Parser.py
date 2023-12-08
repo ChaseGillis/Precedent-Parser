@@ -13,8 +13,8 @@ from openai import OpenAI
 import re
 
 # API keys
-SCRAPEOPS_API_KEY = "[SCRAPEOS_API_KEY]"
-OPENAI_API_KEY = "[OPENAI API KEY]"
+SCRAPEOPS_API_KEY = ""
+OPENAI_API_KEY = ""
 
 # frontend code
 # logo images
@@ -271,22 +271,35 @@ with col1:
 
             # create a big string that will be put in
             allOpinions = ""
-            numberToLimit = int(113600 / len(bigArray)) - 13
+            numberToLimit = int(111111 / len(bigArray)) - 13
             for i in range(len(bigArray)):
                 allOpinions += "{OPINION " + str(i + 1) + "}\n"
-                if len(bigArray[i]) > numberToLimit:
-                    # limit it if it's too big
-                    allOpinions += bigArray[i][0:numberToLimit] + "...UNFINISHED\n"
-                else:
-                    allOpinions += bigArray[i] + "\n"
+                allOpinions += bigArray[i] + "\n"
 
-            outputMessage = str(len(allOpinions)) + allOpinions
+            # if it goes past the word limit, 111111, run it again but this time limit it
+            if(len(allOpinions)>= 111111):
+                allOpinions = ""
+                numberToLimit = int(111111 / len(bigArray)) - 13
+                for i in range(len(bigArray)):
+                    allOpinions += "{OPINION " + str(i + 1) + "}\n"
+                    if len(bigArray[i]) > numberToLimit:
+                        # limit it if it's too big
+                        allOpinions += bigArray[i][0:numberToLimit] + "...UNFINISHED\n"
+                    else:
+                        allOpinions += bigArray[i] + "\n"
+
+            # #remove limiter if needed for testing
+            # allOpinions += bigArray[i] + "\n"
+
+            #outputMessage = str(len(allOpinions)) + allOpinions
+            
+            
             client = OpenAI(api_key=OPENAI_API_KEY)
 
             response = client.chat.completions.create(
                 model="gpt-4-1106-preview",
                 messages=[{"role": "user",
-                           "content": "Based on these Given court opinions stored in the brackets(separated by {OPINION #}) (ignore any HTML format) [" + allOpinions + "] give the name of the inputted case most relevant to the keywords [" + keywords + "] and then use that case information to write a four-sentence strategy that the winning lawyer used so that a new lawyer can mimic it(note that some opinions may be unfinished and will end with:...UNFINISHED). Use direct quotes from the opinion given to support this strategy. The direct quotes don’t count towards the four-sentence limit. If it's impossible to identify the relevant case or provide a strategy with direct quotes, simply respond: No relevant cases based on inputed values. Finally, append the link to the case at the end"
+                           "content": "Based on these Given court opinions stored in the brackets(separated by {OPINION #}) (ignore any HTML format) [" + allOpinions + "] give the name of the inputted case most relevant to the keywords [" + keywords + "] and then use that case information to write a four-sentence strategy that the winning lawyer used so that a new lawyer can mimic it(note that some opinions may be unfinished and will end with:...UNFINISHED). Use direct quotes from the opinion given to support this strategy. The direct quotes don’t count towards the four-sentence limit. If it's impossible to identify the relevant case and provide a strategy with direct quotes, simply respond: No relevant cases based on inputed values. Finally, append the link to the case at the end"
                            }])
             message = response.choices[0].message.content
             outputMessage = message
