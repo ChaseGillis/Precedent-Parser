@@ -138,7 +138,7 @@ def search_cases(keywords, jurisdiction=None):
         month = before_date.strftime("%m")
         day = before_date.strftime("%d")
         search_url += "&filed_before=" + month + "%2F" + day + "%2F" + year
-    # pain.....I just did this manually because I'm an idiot
+    # Have not yet added in ability for other states besides new york yet
     match jurisdiction:
         case "Alabama'":
             search_url += "&court=nyed%20nynd%20nysd%20nywd%20nyeb%20nynb%20nysb%20nywb%20ny%20nyappdiv%20nyappterm%20nysupct%20nyfamct%20nysurct%20nycivct%20nycrimct%20nyag"
