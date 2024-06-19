@@ -13,8 +13,7 @@ from openai import OpenAI
 import re
 
 # API keys
-SCRAPEOPS_API_KEY = ""
-OPENAI_API_KEY = ""
+
 
 # frontend code
 # logo images
@@ -23,11 +22,18 @@ kevin_image = Image.open(os.path.join(os.path.dirname(__file__), 'kevin.png'))
 bryan_image = Image.open(os.path.join(os.path.dirname(__file__), 'bryan.PNG'))
 chase_image = Image.open(os.path.join(os.path.dirname(__file__), 'chase.PNG'))
 
-# set up layout
-col1, col2, col3 = st.columns([1.3, 1.3, 1.3])
 
-# setup columns
+# Initialize session state for team button
+if 'team_open' not in st.session_state:
+    st.session_state.team_open = False
+
+# Setup columns
+col1, col2, col3 = st.columns([1, 5, 1])
+
 with col1:
+    st.write('')
+    st.write('')
+    st.write('')
     st.write('')
     st.write('')
     st.image(logo_image, width=230)
@@ -37,41 +43,43 @@ with col2:
 
 with col3:
     st.write('')
-    team_col = st.columns([1])
-
-    # initialize a state variable to keep track of the toggle state
-    team_open = st.session_state.get('team_open', False)
-
-    # display the Team button with dropdown arrow
-    if team_open:
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    # Display the Team button with dropdown arrow
+    if st.session_state.team_open:
         team_button = st.button('Team \u25B2')
     else:
         team_button = st.button('Team \u25BC')
 
+    # Toggle team_open state when button is clicked
     if team_button:
-        team_open = not team_open
-        st.session_state.update({'team_open': team_open})
+        st.session_state.team_open = not st.session_state.team_open
+        st.experimental_rerun()  # Force a rerun to update the state immediately
 
-    if team_open:
-        with col1:
-            st.image(chase_image, width=200)
-            st.write(
-                'My name is Chase Gillis. I am currently a Junior majoring Computer Science and minoring in Data Science!')
-        with col2:
+# Display team information if team_open is True
+if st.session_state.team_open:
+    col1, col2, col3 = st.columns([1, 1, 1])
+    
+    with col1:
+        st.image(chase_image, width=200)
+        st.write('My name is Chase Gillis. I am currently a Junior majoring in Computer Science and minoring in Data Science!')
+
+    with col2:
+        st.write('')
+        st.write('')
+        st.write('')
+        st.image(bryan_image, width=200)
+        st.write('My name is Bryan Ko. I am currently a Freshman majoring in Computer Science and Data Science, and minoring in Game Design!')
+
+    with col3:
+        i = 0
+        while i < 6:
             st.write('')
-            st.write('')
-            st.write('')
-            st.image(bryan_image, width=200)
-            st.write(
-                'My name is Bryan Ko. I am currently a Freshman majoring Computer Science and Data Science, and minoring in Game Design!')
-        with col3:
-            i = 0
-            while i < 6:
-                st.write('')
-                i += 1
-            st.image(kevin_image, width=200)
-            st.write(
-                'My name is Kevin Dong. I am currently a Freshman majoring Math and Computer Science, and minoring in Data Science!')
+            i += 1
+        st.image(kevin_image, width=200)
+        st.write('My name is Kevin Dong. I am currently a Freshman majoring in Math and Computer Science, and minoring in Data Science!')
 
 # main content section
 st.header('What cases are you looking for?')
@@ -297,7 +305,7 @@ with col1:
             client = OpenAI(api_key=OPENAI_API_KEY)
 
             response = client.chat.completions.create(
-                model="gpt-4-1106-preview",
+                model="gpt-3.5-turbo",
                 messages=[{"role": "user",
                            "content": "Based on these Given court opinions stored in the brackets(separated by {OPINION #}) (ignore any HTML format) [" + allOpinions + "] give the name of the inputted case most relevant to the keywords [" + keywords + "] and then use that case information to write a four-sentence strategy that the winning lawyer used so that a new lawyer can mimic it(note that some opinions may be unfinished and will end with:...UNFINISHED). Use direct quotes from the opinion given to support this strategy. The direct quotes don’t count towards the four-sentence limit. If it's impossible to identify the relevant case and provide a strategy with direct quotes, simply respond: No relevant cases based on inputed values. Finally, append the link to the case at the end"
                            }])
