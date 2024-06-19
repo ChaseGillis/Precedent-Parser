@@ -71,10 +71,7 @@ pure-eval==0.2.2
 pyarrow==16.1.0
 PyAutoGUI==0.9.53
 pycparser==2.21
-pydantic==2.7.4
-pydantic_core==2.18.4
 pydeck==0.9.1
-pygame==2.3.0
 PyGetWindow==0.0.9
 pygls==1.0.1
 Pygments==2.14.0
