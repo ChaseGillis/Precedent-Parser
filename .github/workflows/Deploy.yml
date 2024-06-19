@@ -26,4 +26,5 @@ jobs:
           SCRAPEOPS_API_KEY: ${{ secrets.SCRAPEOPS_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
+          cd Precedent_Parser
           python3 Precedent_Parser.py
