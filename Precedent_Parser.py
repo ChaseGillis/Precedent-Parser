@@ -11,9 +11,11 @@ import json
 from random import randint
 from openai import OpenAI
 import re
+import os
 
-# API keys
-
+# Access the API keys from environment variables
+scrapeops_api_key = os.getenv('SCRAPEOPS_API_KEY')
+openai_api_key = os.getenv('OPENAI_API_KEY')
 
 # frontend code
 # logo images
