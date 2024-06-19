@@ -76,7 +76,6 @@ PyScreeze==0.1.28
 python-dateutil==2.8.2
 pytweening==1.0.4
 pytz==2024.1
-pyzmq==25.0.0
 referencing==0.35.1
 requests==2.31.0
 rich==13.7.1
