@@ -13,16 +13,16 @@ from openai import OpenAI
 import re
 import os
 
+# frontend code
+# logo images
+logo_image = Image.open(os.path.join(os.path.dirname(__file__), 'logo.png'))
+kevin_image = Image.open(os.path.join(os.path.dirname(__file__), 'kevin.png'))
+bryan_image = Image.open(os.path.join(os.path.dirname(__file__), 'bryan.png'))
+chase_image = Image.open(os.path.join(os.path.dirname(__file__), 'chase.png'))
+
 # Access the API keys from environment variables
 scrapeops_api_key = os.getenv('SCRAPEOPS_API_KEY')
 openai_api_key = os.getenv('OPENAI_API_KEY')
-
-# frontend code
-# logo images
-logo_image = Image.open(os.path.join(os.path.dirname(__file__), 'logo.PNG'))
-kevin_image = Image.open(os.path.join(os.path.dirname(__file__), 'kevin.png'))
-bryan_image = Image.open(os.path.join(os.path.dirname(__file__), 'bryan.PNG'))
-chase_image = Image.open(os.path.join(os.path.dirname(__file__), 'chase.PNG'))
 
 
 # Initialize session state for team button
