@@ -27,18 +27,10 @@ jobs:
 
       - name: Log in to Heroku container registry and CLI
         env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API }}
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
           echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
           heroku container:login
-
-      - name: Debug Environment Variables
-        env:
-          SCRAPEOPS_API_KEY: ${{ secrets.SCRAPEOPS_API_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          echo "SCRAPEOPS_API_KEY: $SCRAPEOPS_API_KEY"
-          echo "OPENAI_API_KEY: $OPENAI_API_KEY"
 
       - name: Build and Deploy to Heroku
         env:

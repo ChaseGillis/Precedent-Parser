@@ -22,10 +22,15 @@ chase_image = Image.open(os.path.join(os.path.dirname(__file__), 'chase.png'))
 # Access the API keys from environment variables
 SCRAPEOPS_API_KEY = os.getenv('SCRAPEOPS_API_KEY')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-if not OPENAI_API_KEY:
-    raise ValueError("OPENAI_API_KEY environment variable is not set.")
-if not SCRAPEOPS_API_KEY:
-    raise ValueError("SCRAPEOPS_API_KEY environment variable is not set.")
+HEROKU_API_KEY = os.getenv('HEROKU_API_KEY')
+
+
+print(f"SCRAPEOPS_API_KEY: {SCRAPEOPS_API_KEY}")
+print(f"OPENAI_API_KEY: {OPENAI_API_KEY}")
+print(f"HEROKU_API_KEY: {HEROKU_API_KEY}")
+print()
+
+
 
 
 
