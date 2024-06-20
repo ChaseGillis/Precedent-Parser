@@ -11,7 +11,6 @@ import json
 from random import randint
 from openai import OpenAI
 import re
-import os
 
 # frontend code
 # logo images
