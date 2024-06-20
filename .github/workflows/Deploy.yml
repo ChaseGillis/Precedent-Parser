@@ -31,20 +31,20 @@ jobs:
         run: |
           echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
           heroku container:login
+
       - name: Debug Environment Variables
+        env:
+          SCRAPEOPS_API_KEY: ${{ secrets.SCRAPEOPS_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          echo "SCRAPEOPS_API_KEY: ${{ secrets.SCRAPEOPS_API_KEY }}"
-          echo "OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}"
+          echo "SCRAPEOPS_API_KEY: $SCRAPEOPS_API_KEY"
+          echo "OPENAI_API_KEY: $OPENAI_API_KEY"
 
       - name: Build and Deploy to Heroku
         env:
           SCRAPEOPS_API_KEY: ${{ secrets.SCRAPEOPS_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          docker build \
-            --build-arg SCRAPEOPS_API_KEY=${SCRAPEOPS_API_KEY} \
-            --build-arg OPENAI_API_KEY=${OPENAI_API_KEY} \
-            -t registry.heroku.com/precedent-parser/web .
-          
+          docker build -t registry.heroku.com/precedent-parser/web .
           docker push registry.heroku.com/precedent-parser/web
           heroku container:release web -a precedent-parser
