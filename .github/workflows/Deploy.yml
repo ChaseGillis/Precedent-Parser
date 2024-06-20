@@ -21,9 +21,20 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run application
+      - name: Set up Heroku CLI
+        run: |
+          curl https://cli-assets.heroku.com/install.sh | sh
+
+      - name: Log in to Heroku
+        run: |
+          echo ${{ secrets.HEROKU_API_KEY }} | heroku auth:token
+          heroku container:login
+
+      - name: Build and Deploy to Heroku
         env:
           SCRAPEOPS_API_KEY: ${{ secrets.SCRAPEOPS_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          python3 Precedent_Parser.py
+          docker build -t registry.heroku.com/your-app-name/web .
+          docker push registry.heroku.com/your-app-name/web
+          heroku container:release web -a your-app-name
