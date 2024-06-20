@@ -25,14 +25,6 @@ OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 HEROKU_API_KEY = os.getenv('HEROKU_API_KEY')
 
 
-print(f"SCRAPEOPS_API_KEY: {SCRAPEOPS_API_KEY}")
-print(f"OPENAI_API_KEY: {OPENAI_API_KEY}")
-print(f"HEROKU_API_KEY: {HEROKU_API_KEY}")
-print()
-
-
-
-
 
 # Initialize session state for team button
 if 'team_open' not in st.session_state:
