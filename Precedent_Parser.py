@@ -3,6 +3,7 @@ import streamlit as st
 from PIL import Image
 import os
 import datetime
+import numpy as np
 
 # import backend libraries
 import requests
@@ -12,9 +13,25 @@ from random import randint
 from openai import OpenAI
 import re
 
+
+def invert_image(image):
+    
+    # Convert image to numpy array
+    img_array = np.array(image)
+    
+    # Invert image color
+    inverted_array = 255 - img_array
+    
+    # Convert array back to image
+    inverted_image = Image.fromarray(inverted_array.astype('uint8'))
+    
+    return inverted_image
+
+
 # frontend code
 # logo images
 logo_image = Image.open(os.path.join(os.path.dirname(__file__), 'logo.png'))
+#logo_image = invert_image(logo_image)
 kevin_image = Image.open(os.path.join(os.path.dirname(__file__), 'kevin.png'))
 bryan_image = Image.open(os.path.join(os.path.dirname(__file__), 'bryan.png'))
 chase_image = Image.open(os.path.join(os.path.dirname(__file__), 'chase.png'))
@@ -38,10 +55,11 @@ with col1:
     st.write('')
     st.write('')
     st.write('')
-    st.image(logo_image, width=230)
+    st.write('')
+    st.write('')
 
 with col2:
-    st.title('Precedent Parser')
+    st.title(':orange[PRECEDENT PARSER]')
 
 with col3:
     st.write('')
@@ -86,18 +104,8 @@ if st.session_state.team_open:
 # main content section
 st.header('What cases are you looking for?')
 
-white_text_style = """
-    <style>
-    .st-cs {
-        color: white;
-    }
-    </style>
-    """
-
-# Display the custom CSS style in the Streamlit app
-st.markdown(white_text_style, unsafe_allow_html=True)
 # search bar
-keywords = st.text_area('Enter keywords:', height=100, css_classes=["st-cs"])
+keywords = st.text_area(':white[Enter keywords:]', height=100)
 
 # date and state filters
 st.subheader('Filter by date and state:')
@@ -251,7 +259,11 @@ with col1:
 
             # create a big string that will be put in
             allOpinions = ""
-            numberToLimit = int(111111 / len(bigArray)) - 13
+            try:
+                numberToLimit = int(111111 / len(bigArray)) - 13
+            except ZeroDivisionError:
+                numberToLimit = 0
+                print("Can't divide by 0")
             for i in range(len(bigArray)):
                 allOpinions += "{OPINION " + str(i + 1) + "}\n"
                 allOpinions += bigArray[i] + "\n"
@@ -304,7 +316,11 @@ with col2:
 
             # create a big string that will be put in
             allOpinions = ""
-            numberToLimit = int(113600 / len(bigArray)) - 13
+            try:
+                numberToLimit = int(113600 / len(bigArray)) - 13
+            except ZeroDivisionError:
+                numberToLimit = 0
+                print("Cant divid by 0")
             for i in range(len(bigArray)):
                 allOpinions += "{OPINION " + str(i + 1) + "}\n"
                 if len(bigArray[i]) > numberToLimit:
@@ -324,9 +340,34 @@ with col2:
             message = response.choices[0].message.content
             outputMessage = message
 
-st.text_area(label="Result:",
-             value="Enter search parameters and press the 'Search' button" if outputMessage == "" else outputMessage,
-             height=400,
-             disabled=True,
-            label_visibility="collapsed",
-            css_classes=["st-cs"])
+
+# Use st.markdown to style the text content
+st.markdown(
+    f'<div style="color: white;">Result:</div>',
+    unsafe_allow_html=True
+)
+
+
+# Define your text content
+text_content = "Enter search parameters and press the 'Search' button" if outputMessage == "" else f"{outputMessage}"
+
+# Define custom CSS style for the outer box and text content
+custom_style = """
+    <style>
+        .custom-box {
+            background-color: #282434; /* Green background color */
+            padding: 10px; /* Padding around the content */
+            border-radius: 5px; /* Rounded corners */
+        }
+        .custom-text {
+            color: white; /* Text color */
+        }
+    </style>
+"""
+
+# Use st.markdown to display the styled outer box and text content
+st.markdown(
+    f'{custom_style}<div class="custom-box"><div class="custom-text">{text_content}</div></div>',
+    unsafe_allow_html=True
+)
+
