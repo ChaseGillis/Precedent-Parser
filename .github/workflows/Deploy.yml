@@ -33,16 +33,15 @@ jobs:
           heroku container:login
 
       - name: Build Docker image
-        env:
-          SCRAPEOPS_API_KEY: ${{ secrets.SCRAPEOPS_API_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          docker build --build-arg SCRAPEOPS_API_KEY=${{ secrets.SCRAPEOPS_API_KEY }} \
-                       --build-arg OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
-                       -t registry.heroku.com/precedent-parser/web .
+        run: docker build -t registry.heroku.com/precedent-parser/web .
 
       - name: Push Docker image to Heroku
         run: docker push registry.heroku.com/precedent-parser/web
 
       - name: Release Docker image on Heroku
         run: heroku container:release web -a precedent-parser
+
+      - name: Set environment variables on Heroku
+        run: |
+          heroku config:set SCRAPEOPS_API_KEY=${{ secrets.SCRAPEOPS_API_KEY }} --app precedent-parser
+          heroku config:set OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} --app precedent-parser
