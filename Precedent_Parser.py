@@ -20,8 +20,8 @@ bryan_image = Image.open(os.path.join(os.path.dirname(__file__), 'bryan.png'))
 chase_image = Image.open(os.path.join(os.path.dirname(__file__), 'chase.png'))
 
 # Access the API keys from environment variables
-SCRAPEOPS_API_KEY = os.environ.get('SCRAPEOPS_API_KEY')
-OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
+SCRAPEOPS_API_KEY = os.environ['SCRAPEOPS_API_KEY']
+OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
 
 
 
