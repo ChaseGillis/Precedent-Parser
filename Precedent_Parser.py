@@ -21,8 +21,8 @@ bryan_image = Image.open(os.path.join(os.path.dirname(__file__), 'bryan.png'))
 chase_image = Image.open(os.path.join(os.path.dirname(__file__), 'chase.png'))
 
 # Access the API keys from environment variables
-scrapeops_api_key = os.getenv('SCRAPEOPS_API_KEY')
-openai_api_key = os.getenv('OPENAI_API_KEY')
+SCRAPEOPS_API_KEY = os.getenv('SCRAPEOPS_API_KEY')
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
 
 # Initialize session state for team button
