@@ -21,13 +21,15 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Set up Heroku CLI
+      - name: Install Heroku CLI
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
 
-      - name: Log in to Heroku
+      - name: Log in to Heroku container registry and CLI
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API }}
         run: |
-          echo ${{ secrets.HEROKU_API }} | heroku auth:token
+          echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
           heroku container:login
 
       - name: Build and Deploy to Heroku
