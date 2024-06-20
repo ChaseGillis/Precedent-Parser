@@ -1,1 +1,1 @@
-web: streamlit run runserver --server.port $PORT
+web: streamlit run Precedent_Parser.py --server.port $PORT
