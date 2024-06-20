@@ -37,8 +37,8 @@ jobs:
           SCRAPEOPS_API_KEY: ${{ secrets.SCRAPEOPS_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          export "SCRAPEOPS_API_KEY=$SCRAPEOPS_API_KEY"=SCRAPEOPS_API_KEY
-          export "OPENAI_API_KEY=$OPENAI_API_KEY"=OPENAI_API_KEY
+          export SCRAPEOPS_API_KEY=$SCRAPEOPS_API_KEY
+          export OPENAI_API_KEY=$OPENAI_API_KEY
   
       - name: Build and Deploy to Heroku
         run: |
