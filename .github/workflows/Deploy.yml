@@ -35,6 +35,6 @@ jobs:
           SCRAPEOPS_API_KEY: ${{ secrets.SCRAPEOPS_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          docker build -t registry.heroku.com/your-app-name/web .
-          docker push registry.heroku.com/your-app-name/web
-          heroku container:release web -a your-app-name
+          docker build -t registry.heroku.com/precedent-parser/web .
+          docker push registry.heroku.com/precedent-parser/web
+          heroku container:release web -a precedent-parser
