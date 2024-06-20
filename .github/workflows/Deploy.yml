@@ -32,10 +32,15 @@ jobs:
           echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
           heroku container:login
 
-      - name: Build and Deploy to Heroku
+      - name: Set environment variables
         env:
           SCRAPEOPS_API_KEY: ${{ secrets.SCRAPEOPS_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          echo "SCRAPEOPS_API_KEY=$SCRAPEOPS_API_KEY" >> $GITHUB_ENV
+          echo "OPENAI_API_KEY=$OPENAI_API_KEY" >> $GITHUB_ENV
+  
+      - name: Build and Deploy to Heroku
         run: |
           docker build -t registry.heroku.com/precedent-parser/web .
           docker push registry.heroku.com/precedent-parser/web
