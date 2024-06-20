@@ -1,14 +1,21 @@
-# Use an official Python runtime as a parent image
-FROM python:3.9
+# Base image
+FROM python:3.x
 
-# Set the working directory inside the container
+# Set environment variables
+ARG SCRAPEOPS_API_KEY
+ARG OPENAI_API_KEY
+ENV SCRAPEOPS_API_KEY=$SCRAPEOPS_API_KEY
+ENV OPENAI_API_KEY=$OPENAI_API_KEY
+
+# Set working directory
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+# Copy requirements file and install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install any needed packages specified in requirements.txt
-RUN pip install -r requirements.txt
+# Copy the rest of the application code
+COPY . .
 
-# Command to run your Python script
-CMD ["python", "Precedent_Parser.py"]
+# Run the application
+CMD ["python", "precedent_parser.py"]
