@@ -86,8 +86,18 @@ if st.session_state.team_open:
 # main content section
 st.header('What cases are you looking for?')
 
+white_text_style = """
+    <style>
+    .st-cs {
+        color: white;
+    }
+    </style>
+    """
+
+# Display the custom CSS style in the Streamlit app
+st.markdown(white_text_style, unsafe_allow_html=True)
 # search bar
-keywords = st.text_area('Enter keywords:', height=100)
+keywords = st.text_area('Enter keywords:', height=100, css_classes=["st-cs"])
 
 # date and state filters
 st.subheader('Filter by date and state:')
@@ -314,19 +324,9 @@ with col2:
             message = response.choices[0].message.content
             outputMessage = message
 
-white_text_style = """
-    <style>
-    .st-cs {
-        color: white;
-    }
-    </style>
-    """
-
-# Display the custom CSS style in the Streamlit app
-st.markdown(white_text_style, unsafe_allow_html=True)
-
 st.text_area(label="Result:",
              value="Enter search parameters and press the 'Search' button" if outputMessage == "" else outputMessage,
              height=400,
              disabled=True,
-            label_visibility="collapsed")
+            label_visibility="collapsed",
+            css_classes=["st-cs"])
