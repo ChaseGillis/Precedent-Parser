@@ -30,7 +30,7 @@ def invert_image(image):
 
 # frontend code
 # logo images
-logo_image = Image.open(os.path.join(os.path.dirname(__file__), 'logo.png'))
+# logo_image = Image.open(os.path.join(os.path.dirname(__file__), 'logo.png'))
 #logo_image = invert_image(logo_image)
 kevin_image = Image.open(os.path.join(os.path.dirname(__file__), 'kevin.png'))
 bryan_image = Image.open(os.path.join(os.path.dirname(__file__), 'bryan.png'))
